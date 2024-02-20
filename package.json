@@ -1,0 +1,31 @@
+{
+	"name": "lanchat",
+	"description": "Turn your network into an IRC-style chatroom with zero setup!",
+	"author": {
+		"name": "KiARC",
+		"email": "lanchat@kiarc.win"
+	},
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"license": "GPL-3.0-only",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"preview": "vite preview",
+		"tauri": "tauri"
+	},
+	"dependencies": {
+		"@tauri-apps/api": "^1.5.2",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	},
+	"devDependencies": {
+		"@tauri-apps/cli": "^1.5.8",
+		"@types/react": "^18.2.15",
+		"@types/react-dom": "^18.2.7",
+		"@vitejs/plugin-react": "^4.2.1",
+		"typescript": "^5.0.2",
+		"vite": "^5.0.0"
+	}
+}
