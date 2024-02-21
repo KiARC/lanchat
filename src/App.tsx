@@ -61,8 +61,8 @@ export default function App() {
 								<Message key={index} author={message.author} content={message.content} time={message.time} />
 							))}
 						</div>
-
-						<div className="flex justify-between mt-2 align-bottom">
+						<hr className="my-1 rounded-xl bg-green-800 h-2" />
+						<div className="flex justify-between mt-1 align-bottom">
 							<input
 								type="text"
 								value={inputValue}
