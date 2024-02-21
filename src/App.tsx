@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, MemoryRouter, Route, Routes, redirect } from 'react-router-dom';
+import { Link, Route, Routes, redirect } from 'react-router-dom';
 
 type Message = {
 	author: string;
@@ -21,7 +21,6 @@ export default function App() {
 	}, [messages]);
 
 	return (
-		<MemoryRouter>
 			<Routes>
 				<Route
 					path="/"
@@ -86,6 +85,5 @@ export default function App() {
 					}
 				/>
 			</Routes>
-		</MemoryRouter>
 	);
 }
