@@ -1,3 +1,5 @@
+cargo-features = ["profile-rustflags"]
+
 [package]
 name = "lanchat"
 version = "0.0.0"
@@ -14,9 +16,27 @@ tauri-build = { version = "1.5", features = [] }
 [dependencies]
 tauri = { version = "1.5", features = ["shell-open"] }
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+chrono = { version = "0.4.35", features = ["clock"] }
+rmp-serde = "1.1.2"
+libp2p = { version = "0.53.2", features = [
+    "mdns",
+    "noise",
+    "tcp",
+    "yamux",
+    "gossipsub",
+    "tokio",
+    "quic",
+    "macros",
+] }
+tokio = { version = "1.37.0", features = ["macros", "rt-multi-thread"] }
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
 # DO NOT REMOVE!!
 custom-protocol = ["tauri/custom-protocol"]
+
+[profile.dev]
+rustflags = ["-Z", "threads=8"]
+
+[profile.release]
+rustflags = ["-Z", "threads=8"]

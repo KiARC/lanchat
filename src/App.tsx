@@ -1,17 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
-import Message from './components/Message';
+import MessageComponent from './components/Message';
+import { event, tauri } from '@tauri-apps/api';
 
 type Message = {
-	author: string;
 	content: string;
-	time: Date;
+	nickname: string;
+	timestamp: number;
 };
 
 export default function App() {
 	const [uname, setUname] = React.useState('');
 	const [messages, setMessages] = React.useState<Message[]>([]);
 	const [inputValue, setInputValue] = React.useState('');
+
+	useEffect(() => {
+		event.listen('plugin:lanchat|receivedMessage', (msg: any) => {
+			console.log(msg);
+
+			setMessages((prev) => [...prev, msg.payload]);
+		});
+	}, []);
+
+	function sendMessage(message: Message) {
+		setMessages((prev) => [...prev, message]);
+		tauri.invoke('plugin:lanchat|send', { message });
+	}
 
 	const chatWindowRef = React.useRef<HTMLDivElement>(null);
 
@@ -58,7 +72,12 @@ export default function App() {
 					<div className="flex flex-col justify-end h-dvh w-dvw bg-green-100 p-2">
 						<div className="flex flex-col p-2 w-full overflow-y-auto space-y-2 overscroll-contain" ref={chatWindowRef}>
 							{messages.map((message, index) => (
-								<Message key={index} author={message.author} content={message.content} time={message.time} />
+								<MessageComponent
+									key={index}
+									author={message.nickname}
+									content={message.content}
+									time={new Date(message.timestamp * 1000)}
+								/>
 							))}
 						</div>
 						<hr className="my-1 rounded-xl bg-green-800 h-2" />
@@ -69,14 +88,11 @@ export default function App() {
 								onChange={(e) => setInputValue(e.target.value)}
 								onKeyUp={(e) => {
 									if (e.key === 'Enter' && inputValue.trim().length > 0) {
-										setMessages([
-											...messages,
-											{
-												content: inputValue,
-												author: uname,
-												time: new Date(),
-											},
-										]);
+										sendMessage({
+											content: inputValue,
+											nickname: uname,
+											timestamp: Math.floor(Date.now() / 1000),
+										});
 										setInputValue('');
 									}
 								}}
@@ -86,14 +102,11 @@ export default function App() {
 								className="p-2 rounded-lg bg-green-900 text-white drop-shadow-md"
 								onClick={() => {
 									if (inputValue.trim().length > 0) {
-										setMessages([
-											...messages,
-											{
-												content: inputValue,
-												author: uname,
-												time: new Date(),
-											} as Message,
-										]);
+										sendMessage({
+											content: inputValue,
+											nickname: uname,
+											timestamp: Math.floor(Date.now() / 1000),
+										});
 										setInputValue('');
 									}
 								}}
